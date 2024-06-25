@@ -10,6 +10,9 @@ Module Program
     Private des As String
     Private source As String
     Private buffer As Byte()
+    Private subfiles As New List(Of FileData)()
+
+
 
     Sub Main(args As String())
 
@@ -21,21 +24,21 @@ Module Program
 
         If File.Exists(source) Then
 
+            ' Lấy thông tin đường dẫn trích xuất tệp
+            des = Path.GetDirectoryName(source) & "\" & Path.GetFileNameWithoutExtension(source) & "\"
             br = New BinaryReader(File.OpenRead(source))
+
             Dim sign As String = New String(br.ReadChars(3))
             Dim vers As String = br.ReadInt32
 
 
             br.BaseStream.Position = 19
-            Dim subfiles As New List(Of FileData)()
 
             ' Lưu dữ liệu Block
             For i As Int32 = 0 To 469
                 subfiles.Add(New FileData)
             Next
 
-            ' Lấy thông tin đường dẫn trích xuất tệp
-            des = Path.GetDirectoryName(source & "\" & Path.GetFileNameWithoutExtension(source) & "\")
             Directory.CreateDirectory(des)
 
             ' Trích xuất dữ liệu Block
